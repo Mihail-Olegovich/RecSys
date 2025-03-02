@@ -38,7 +38,6 @@ def test_get_reco_model_not_found(
     client: TestClient,
     api_key: str,
 ):
-    """Тест проверяет, что при запросе несуществующей модели возвращается ошибка ModelNotFoundError"""
     invalid_model_name = "non_existent_model"
     user_id = 123
 
