@@ -1,6 +1,9 @@
 import os
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+load_dotenv()
 
 
 class Config(BaseSettings):
@@ -14,7 +17,6 @@ class LogConfig(Config):
 
 
 class AuthConfig(Config):
-    model_config = SettingsConfigDict(case_sensitive=False)
     api_key: str = os.getenv("AUTH_API_KEY")
 
 

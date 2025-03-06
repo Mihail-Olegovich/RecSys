@@ -1,9 +1,7 @@
 import os
 
 import uvicorn
-from dotenv import load_dotenv
 
-load_dotenv()
 
 from service.api.app import create_app
 from service.settings import get_config
