@@ -1,10 +1,12 @@
+import random
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
-from service.api.exceptions import UserNotFoundError
+from service.api.exceptions import ModelNotFoundError
 from service.log import app_logger
+from service.models import Error, ModelNames
 
 
 class RecoResponse(BaseModel):
@@ -27,6 +29,25 @@ async def health() -> str:
     path="/reco/{model_name}/{user_id}",
     tags=["Recommendations"],
     response_model=RecoResponse,
+    responses={
+        404: {
+            "model": Error,
+            "description": "Model not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "errors": [
+                            {
+                                "error_key": "model_not_found",
+                                "error_message": "Model 'unknown_model' not found",
+                                "error_loc": None,
+                            }
+                        ]
+                    }
+                }
+            },
+        }
+    },
 )
 async def get_reco(
     request: Request,
@@ -35,13 +56,14 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    # Write your code here
-
-    if user_id > 10**9:
-        raise UserNotFoundError(error_message=f"User {user_id} not found")
+    if model_name != ModelNames.TEST_MODEL.value:
+        raise ModelNotFoundError(
+            error_message=f"Model '{model_name}' not found",
+        )
 
     k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
+    reco = random.sample(range(1, 1000), k_recs)
+
     return RecoResponse(user_id=user_id, items=reco)
 
 
