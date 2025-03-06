@@ -1,4 +1,6 @@
 # pylint: disable=redefined-outer-name
+import os
+
 import pytest
 from fastapi import FastAPI
 from starlette.testclient import TestClient
@@ -23,3 +25,9 @@ def app(
 @pytest.fixture
 def client(app: FastAPI) -> TestClient:
     return TestClient(app=app)
+
+
+@pytest.fixture
+def api_key() -> str:
+    """API-ключ для тестов"""
+    return os.environ.get("AUTH_API_KEY")
