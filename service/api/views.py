@@ -1,4 +1,3 @@
-import random
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request
@@ -63,7 +62,7 @@ async def get_reco(
 
     k_recs = request.app.state.k_recs
     model = request.app.state.model
-    reco = model.recommend_cold([user_id], k=k_recs).sort_values(by='rank')['item_id'].tolist()
+    reco = model.recommend_cold([user_id], k=k_recs).sort_values(by="rank")["item_id"].tolist()
 
     return RecoResponse(user_id=user_id, items=reco)
 
