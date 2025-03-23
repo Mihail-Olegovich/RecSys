@@ -56,13 +56,14 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if model_name != ModelNames.TEST_MODEL.value:
+    if model_name != ModelNames.USER_KNN.value:
         raise ModelNotFoundError(
             error_message=f"Model '{model_name}' not found",
         )
 
     k_recs = request.app.state.k_recs
-    reco = random.sample(range(1, 1000), k_recs)
+    model = request.app.state.model
+    reco = model.recommend_cold([user_id], k=k_recs).sort_values(by='rank')['item_id'].tolist()
 
     return RecoResponse(user_id=user_id, items=reco)
 
