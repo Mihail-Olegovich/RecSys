@@ -18,9 +18,8 @@ def service_config() -> ServiceConfig:
 
 
 @pytest.fixture
-def app(
-    service_config: ServiceConfig,
-) -> FastAPI:
+def base_app(service_config: ServiceConfig) -> FastAPI:
+    """Базовое приложение без моков"""
     app = create_app(service_config)
     return app
 
@@ -34,7 +33,6 @@ def api_key() -> str:
 @pytest.fixture
 def mock_data():
     """Фикстура с моковыми данными для тестов"""
-
     test_user_id = 123
     test_user_idx = 0
     test_item_ids = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010]
@@ -92,22 +90,22 @@ def mock_dataset_cold():
 
 
 @pytest.fixture
-def patched_app(app, mock_data, mock_hnsw, mock_pop_model, mock_dataset_cold):
+def app(base_app, mock_data, mock_hnsw, mock_pop_model, mock_dataset_cold):
     """Патчит приложение моковыми объектами"""
-    app.state.user_id_to_idx = mock_data["user_id_to_idx"]
-    app.state.idx_to_user_id = mock_data["idx_to_user_id"]
-    app.state.item_id_to_idx = mock_data["item_id_to_idx"]
-    app.state.idx_to_item_id = mock_data["idx_to_item_id"]
-    app.state.user_embeddings = mock_data["user_embeddings"]
-    app.state.item_embeddings = mock_data["item_embeddings"]
-    app.state.hnsw = mock_hnsw
-    app.state.pop = mock_pop_model
-    app.state.dataset_cold = mock_dataset_cold
+    base_app.state.user_id_to_idx = mock_data["user_id_to_idx"]
+    base_app.state.idx_to_user_id = mock_data["idx_to_user_id"]
+    base_app.state.item_id_to_idx = mock_data["item_id_to_idx"]
+    base_app.state.idx_to_item_id = mock_data["idx_to_item_id"]
+    base_app.state.user_embeddings = mock_data["user_embeddings"]
+    base_app.state.item_embeddings = mock_data["item_embeddings"]
+    base_app.state.hnsw = mock_hnsw
+    base_app.state.pop = mock_pop_model
+    base_app.state.dataset_cold = mock_dataset_cold
 
-    return app
+    return base_app
 
 
 @pytest.fixture
-def client(patched_app: FastAPI) -> TestClient:
+def client(app: FastAPI) -> TestClient:
     """Клиент для тестирования с моками"""
-    return TestClient(app=patched_app)
+    return TestClient(app=app)
