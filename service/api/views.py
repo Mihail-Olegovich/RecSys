@@ -1,10 +1,10 @@
-import random
 from typing import List
 
 from fastapi import APIRouter, FastAPI, Request
 from pydantic import BaseModel
 
 from service.api.exceptions import ModelNotFoundError
+from service.api.get_ann_reco import get_recommendations
 from service.log import app_logger
 from service.models import Error, ModelNames
 
@@ -56,13 +56,13 @@ async def get_reco(
 ) -> RecoResponse:
     app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
 
-    if model_name != ModelNames.TEST_MODEL.value:
+    if model_name not in [model.value for model in ModelNames]:
         raise ModelNotFoundError(
             error_message=f"Model '{model_name}' not found",
         )
 
     k_recs = request.app.state.k_recs
-    reco = random.sample(range(1, 1000), k_recs)
+    reco = get_recommendations(user_id, k_recs, request)
 
     return RecoResponse(user_id=user_id, items=reco)
 

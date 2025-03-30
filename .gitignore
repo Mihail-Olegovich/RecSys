@@ -66,4 +66,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-
+notebooks/hw_4_env/
+notebooks/.python-version
