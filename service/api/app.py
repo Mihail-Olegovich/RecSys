@@ -54,7 +54,7 @@ def create_app(config: ServiceConfig) -> FastAPI:
     with open(PATH_TO_DATA + "/config.pkl", "rb") as f:
         config_params = pickle.load(f)
         hnsw_params = config_params["hnsw_params"]
-
+    # pylint: disable=c-extension-no-member
     app.state.hnsw = hnswlib.Index(hnsw_params["space"], hnsw_params["dim"])
     app.state.hnsw.load_index(PATH_TO_DATA + "/hnsw_index.bin", max_elements=len(app.state.item_id_to_idx))
     app.state.hnsw.set_ef(hnsw_params["efS"])
