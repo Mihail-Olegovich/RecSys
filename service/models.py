@@ -12,3 +12,4 @@ class Error(BaseModel):
 
 class ModelNames(str, Enum):
     TEST_MODEL = "test_model"
+    USER_KNN = "UserKnn"
