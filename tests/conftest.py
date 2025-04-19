@@ -1,6 +1,6 @@
 # pylint: disable=redefined-outer-name
 import os
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
@@ -18,9 +18,23 @@ def service_config() -> ServiceConfig:
 
 
 @pytest.fixture
-def base_app(service_config: ServiceConfig) -> FastAPI:
+def mock_userknn():
+    """Мок для UserKnn модели"""
+    userknn_mock = MagicMock()
+
+    def mock_recommend(user_ids, k):
+        items = [1001 + i for i in range(k)]
+        return pd.DataFrame({"user_id": [user_ids[0]] * k, "item_id": items, "rank": list(range(1, k + 1))})
+
+    userknn_mock.recommend = mock_recommend
+    return userknn_mock
+
+
+@pytest.fixture
+def base_app(service_config: ServiceConfig, mock_userknn) -> FastAPI:
     """Базовое приложение без моков"""
-    app = create_app(service_config)
+    with patch("service.api.app.UserKnn.load", return_value=mock_userknn):
+        app = create_app(service_config)
     return app
 
 
