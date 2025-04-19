@@ -22,7 +22,7 @@ def test_get_reco_success(
     api_key: str,
 ) -> None:
     user_id = 123
-    model_name = ModelNames.TEST_MODEL.value
+    model_name = ModelNames.USER_KNN.value
     path = GET_RECO_PATH.format(model_name=model_name, user_id=user_id)
     with client:
         headers = {"Authorization": f"Bearer {api_key}"}
@@ -59,7 +59,7 @@ def test_get_reco_model_not_found(
 
 def test_access_with_valid_api_key(client: TestClient, api_key: str) -> None:
     headers = {"Authorization": f"Bearer {api_key}"}
-    response = client.get("/reco/test_model/123", headers=headers)
+    response = client.get("/reco/UserKnn/123", headers=headers)
 
     assert response.status_code == HTTPStatus.OK
     assert "user_id" in response.json()
@@ -67,7 +67,7 @@ def test_access_with_valid_api_key(client: TestClient, api_key: str) -> None:
 
 def test_access_with_invalid_api_key(client: TestClient) -> None:
     headers = {"Authorization": "Bearer invalid_key"}
-    response = client.get("/reco/test_model/123", headers=headers)
+    response = client.get("/reco/UserKnn/123", headers=headers)
 
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json() == {
@@ -82,7 +82,7 @@ def test_access_with_invalid_api_key(client: TestClient) -> None:
 
 
 def test_access_without_api_key(client: TestClient) -> None:
-    response = client.get("/reco/test_model/123")
+    response = client.get("/reco/UserKnn/123")
 
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json() == {
@@ -98,7 +98,7 @@ def test_access_without_api_key(client: TestClient) -> None:
 
 def test_invalid_auth_header_format(client: TestClient) -> None:
     headers = {"Authorization": "some_key"}
-    response = client.get("/reco/test_model/123", headers=headers)
+    response = client.get("/reco/UserKnn/123", headers=headers)
 
     assert response.status_code == HTTPStatus.FORBIDDEN
     assert response.json() == {

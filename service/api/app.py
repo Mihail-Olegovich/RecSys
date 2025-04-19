@@ -14,6 +14,7 @@ from ..log import app_logger, setup_logging
 from ..settings import ServiceConfig
 from .exception_handlers import add_exception_handlers
 from .middlewares import add_middlewares
+from .userknn import UserKnn
 from .views import add_views
 
 __all__ = ("create_app",)
@@ -41,6 +42,7 @@ def create_app(config: ServiceConfig) -> FastAPI:
 
     app = FastAPI(debug=False)
     app.state.k_recs = config.k_recs
+    app.state.model = UserKnn.load("/Users/kulyaskin_mikhail/ITMO/RecSys/data")
 
     # Проверяем, находимся ли мы в тестовой среде
     is_test_env = os.environ.get("PYTEST_CURRENT_TEST") is not None
