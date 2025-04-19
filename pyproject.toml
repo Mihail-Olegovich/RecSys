@@ -21,6 +21,7 @@ starlette = "^0.27.0"
 httpx = "^0.22.0"  # for starlette.testclient
 pydantic-settings = "^2.0.3"
 pandas = "^2.2.3"
+hnswlib = "^0.8.0"
 implicit = "^0.7.2"
 rectools = "^0.12.0"
 joblib = "^1.4.2"
