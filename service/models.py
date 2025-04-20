@@ -14,3 +14,4 @@ class ModelNames(str, Enum):
     TEST_MODEL = "test_model"
     LIGHT_FM_ANN_MODEL = "lightfm_ann_model"
     USER_KNN = "UserKnn"
+    DSSM = "DSSM"
