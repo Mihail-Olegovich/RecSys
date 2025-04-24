@@ -18,7 +18,7 @@ from .userknn import UserKnn
 from .views import add_views
 
 __all__ = ("create_app",)
-PATH_TO_DATA = "/Users/kulyaskin_mikhail/ITMO/RecSys/data"
+PATH_TO_DATA = "/Users/kulyaskin_mikhail/ITMO/RecSys/data/dssm"
 
 
 def setup_asyncio(thread_name_prefix: str) -> None:
